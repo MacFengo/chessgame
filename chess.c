@@ -72,6 +72,7 @@ int main(void) {
  
     while(!move(field)) {
         printPlayingField(field);
+        field->current_turn == WHITES_TURN ? printf("it's White's turn\n") : printf("it's Black's turn\n");
     }
 }
 
@@ -180,30 +181,45 @@ char move(PlayingField* field) {
         }
     }
 
-    if(field->current_turn == WHITES_TURN) {
 
         
         char piece = field->pieces[(startpoint[1]-'0')-1][turnCharIntoLocation(startpoint[0])];
+        char destination_piece = field->pieces[(destination[1] - '0') - 1][turnCharIntoLocation(destination[0])];
+
         if(piece == -1) {
             printf("FUUUUCK %d\n", __LINE__);
             return false;
         }
 
         printf("Chosen Piece %c on %c%c\n", piece, startpoint[0], startpoint[1]);
-        if(checkIfWhitePiece(piece)) {
+
+        if((checkIfWhitePiece(piece) && field->current_turn != WHITES_TURN) ||
+         (!checkIfWhitePiece(piece) && field->current_turn != BLACKS_TURN)) {
+            printf("not your piece!\n");
+            return false;
+        }
             
+
+
             //if move is possible change turn if not reask
             if(isMovePossible(piece, startpoint, destination, field)) {
                 printf("move valid\n");
 
-                char destination_piece = field->pieces[(destination[1] - '0') -1][turnCharIntoLocation(destination[0])];
+                
+
+
 
                 if(destination_piece == BLACK_KING) {
 
                     printf("White has Won the game! \n");
                     
                     return true;
-                }else if(checkIfWhitePiece(destination_piece)){
+                }else if(destination_piece == WHITE_KING){
+
+                    printf("Black has won the Game! \n");
+
+                    return true;
+                }else if((destination_piece != NO_PIECE) && ((checkIfWhitePiece(destination_piece) && field->current_turn == WHITES_TURN) || (!checkIfWhitePiece(destination_piece) && field->current_turn == BLACKS_TURN))){
                     
                     printf("Please try not to kill your own Piece next time <3\n");
 
@@ -215,9 +231,11 @@ char move(PlayingField* field) {
                     field->pieces[(destination[1] - '0') - 1][turnCharIntoLocation(destination[0])] = piece;
                     field->pieces[(startpoint[1] - '0') - 1][turnCharIntoLocation(startpoint[0])] = NO_PIECE;
 
-
-                    //field->current_turn = BLACKS_TURN;
-
+                    if(field->current_turn == WHITES_TURN) {
+                        field->current_turn = BLACKS_TURN;
+                    }else{
+                        field->current_turn = WHITES_TURN;
+                    }
                     return  false;
                 }
 
@@ -230,19 +248,10 @@ char move(PlayingField* field) {
 
 
 
-            
-        }else{
-            printf("not your piece!\n");
-            return false;
-        }
 
-    }else{ // Blacks Turn
-
-    }
 
     
 
-    return true;
 
 }
 
@@ -284,7 +293,11 @@ char checkIfWhitePiece(char i) {
     case WHITE_TOWER:
         return true;
         break;
-    
+
+    case NO_PIECE:
+        return -1;
+        break;
+
     default:
         return false;
         break;
@@ -309,7 +322,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
             return false;
         }
         //                                            Horizontal | Vertical
-        // it is saved in the char array of the Field as { Number | Letter } and in the char array as Letter | Number
+        // it is saved in the char array of the Field as { Number | Letter } and in the location char array as Letter | Number
         if(verticalmove) { // Numbers stay constant
 
             if(destination[0] > startpoint[0]) { //going right (comparing the letters)
@@ -317,7 +330,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
                 //it checks the way until the piece on the destination, you have to check that one later
                 for(int i = 1; i < (destination[0]-startpoint[0]); i++) {
 
-                    if(field->pieces[(startpoint[0]-'0') + i][turnCharIntoLocation(startpoint[1])] != NO_PIECE) {
+                    if(field->pieces[(startpoint[1]-'0') - 1][turnCharIntoLocation(startpoint[0]) + i] != NO_PIECE) {
                         return false;
                     }
 
@@ -327,7 +340,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
                 for(int i = 1; i < (startpoint[0]-destination[0]); i++) {
 
-                    if(field->pieces[(startpoint[0]-'0') - i][turnCharIntoLocation(startpoint[1])] != NO_PIECE) {
+                    if(field->pieces[(startpoint[1]-'0') - 1][turnCharIntoLocation(startpoint[0]) - i] != NO_PIECE) {
                         return false;
                     }
 
@@ -335,23 +348,23 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
             }
 
-        }else{ // Letters stay constant (comparing)
+        }else{ // Letters stay constant (comparing the numbers)
 
-            if(destination[1] > startpoint[1]) {
+            if(destination[1] > startpoint[1]) { // down
 
                 for(int i = 1; i <(destination[1]-startpoint[1]); i++) {
 
-                     if(field->pieces[turnCharIntoLocation(startpoint[1]) + i][(startpoint[0]-'0')] != NO_PIECE) {
+                     if(field->pieces[(startpoint[1]-'0') - 1 + i][turnCharIntoLocation(startpoint[0])] != NO_PIECE) {
                         return false;
                     }
 
                 }
 
-            }else{
+            }else{ // up
 
                 for(int i = 1; i < (startpoint[1]-destination[1]); i++) {
  
-                    if(field->pieces[turnCharIntoLocation(startpoint[1]) - i][(startpoint[0]-'0')] != NO_PIECE) {
+                    if(field->pieces[(startpoint[1]-'0') - 1 - i][turnCharIntoLocation(startpoint[0])] != NO_PIECE) {
                         return false;
                     }
 
