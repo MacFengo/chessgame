@@ -368,6 +368,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
                         return false;
                     }
 
+
                 }
 
             }
@@ -388,3 +389,5 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
     return false;
 
 }
+
+//hihi
