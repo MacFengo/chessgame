@@ -126,7 +126,7 @@ void generateStartingMap(PlayingField* field) {
     for(int row = 1; row < 7;)  {
         for(int i = 0; i < 8; i++) {
 
-            field->pieces[row][i] = NO_PIECE; // ! change this to pawn later
+            field->pieces[row][i] = pawn; // ! change this to pawn later
             
         }
         if(row == 1) {
@@ -382,6 +382,45 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
     }else if(piece == WHITE_BISHOP || piece == BLACK_BISHOP) {
 
+    }else if(piece == WHITE_PAWN || piece == BLACK_PAWN) {
+
+        int movement_dir = 0;
+        if(piece == WHITE_PAWN) {
+            movement_dir = 1; // moves down
+        }else if(piece == BLACK_PAWN) {
+            movement_dir = -1; // moves up
+        }
+        int destination_row = startpoint[1] - '0' + movement_dir;
+        printf("%d\n", destination_row);
+
+        if(destination_row != (destination[1]-'0')) {
+            return false;
+        }
+
+
+        if((field->pieces[destination_row][turnCharIntoLocation(destination[0])] != NO_PIECE) 
+                                                            && destination[0] == startpoint[0]) {
+
+
+            return false;
+
+        }else if((destination[0] == startpoint[0] + 1) || (destination[0] == startpoint[0] - 1)) {
+            
+            if(field->pieces[destination[1] - '0'][turnCharIntoLocation(destination[0])] == NO_PIECE) {
+                return false;
+            }
+
+            return true;
+
+        }else if(destination[0] == startpoint[0]) {
+
+            return true;
+
+        }else{
+            return false;
+        }
+
+
     }
 
     //this is a test
@@ -389,5 +428,3 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
     return false;
 
 }
-
-//hihi
