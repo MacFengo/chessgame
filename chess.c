@@ -393,6 +393,20 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
         int destination_row = startpoint[1] - '0' + movement_dir;
         printf("%d\n", destination_row);
 
+        if(startpoint[1]-'0' == 2) {
+
+            if(((destination[1] - '0') == 4) && startpoint[0] == destination[0]) {
+                return true;
+            }
+
+        }else if(startpoint[1]-'0' == 7) {
+
+            if(((destination[1]- '0') == 5) && startpoint[0] == destination[0]) {
+                return true;
+            }
+
+        }
+
         if(destination_row != (destination[1]-'0')) {
             return false;
         }
