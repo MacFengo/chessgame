@@ -4,8 +4,6 @@
 #define true 1
 #define false 0
 
-//change
-
 #define BLACK_KING 'E'
 #define BLACK_QUEEN 'Q'
 #define BLACK_BISHOP 'B'
