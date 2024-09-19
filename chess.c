@@ -411,18 +411,56 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
     }else if(piece == WHITE_BISHOP || piece == BLACK_BISHOP) {
 
+        /*
+        
+            check if the distance is equal to both sides
+
+            basically: destination[1] - startpoint[1] == destination[0] - startpoint[0]
+        
+        */
+
+        int diff1 = destination[1] - startpoint[1];
+        if(diff1 < 0) {
+            diff1*=-1;
+        }
+        int diff2 = destination[0] - startpoint[0];
+        if(diff2 < 0) {
+            diff2*=-1;
+        }
+
+        if(diff1 == diff2) {
+
+            for(int i = 1; i < diff1; i++) {
+
+                char current_piece = field->pieces[startpoint[1] - '0' - 1 + i][turnCharIntoLocation(startpoint[0]) + 1];
+
+                if(current_piece != NO_PIECE) {
+                    return false;
+                }
+
+            }
+
+            return true;
+
+        }else{
+
+
+            return false;
+
+
+        }
+        
 
 
     }else if(piece == WHITE_PAWN || piece == BLACK_PAWN) {
 
         int movement_dir = 0;
         if(piece == WHITE_PAWN) {
-            movement_dir = 1; // moves down
+            movement_dir = 2; // moves down
         }else if(piece == BLACK_PAWN) {
             movement_dir = -1; // moves up
         }
         int destination_row = startpoint[1] - '0' + movement_dir;
-        printf("%d\n", destination_row);
 
         if(startpoint[1]-'0' == 2) {
 
@@ -466,6 +504,11 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
             return false;
         }
 
+
+    }else if(piece == WHITE_QUEEN || piece == BLACK_QUEEN) {
+
+
+    }else if(piece == WHITE_KING || piece == BLACK_KING) {
 
     }
 
