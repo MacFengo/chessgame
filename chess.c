@@ -12,7 +12,7 @@
 #define BLACK_TOWER 'T'
 #define BLACK_PAWN 'P'
 
-#define NO_PIECE '#'
+#define NO_PIECE '-'
 
 #define WHITE_KING 'e'
 #define WHITE_QUEEN 'q'
@@ -74,6 +74,10 @@ int main(void) {
         printPlayingField(field);
         field->current_turn == WHITES_TURN ? printf("it's White's turn\n") : printf("it's Black's turn\n");
     }
+
+
+    free(field);
+    field = NULL;
 }
 
 void printPlayingField(PlayingField* field) {
@@ -408,6 +412,8 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
     }else if(piece == WHITE_BISHOP || piece == BLACK_BISHOP) {
 
+
+
     }else if(piece == WHITE_PAWN || piece == BLACK_PAWN) {
 
         int movement_dir = 0;
@@ -421,15 +427,16 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
         if(startpoint[1]-'0' == 2) {
 
-            if(((destination[1] - '0') == 4) && startpoint[0] == destination[0]) {
-                return true;
-            }
+            if(field->pieces[startpoint[1]-'0'][turnCharIntoLocation(startpoint[1])] == NO_PIECE)
+                if(((destination[1] - '0') == 4) && startpoint[0] == destination[0]) {
+                    return true;
+                }
 
         }else if(startpoint[1]-'0' == 7) {
-
-            if(((destination[1]- '0') == 5) && startpoint[0] == destination[0]) {
-                return true;
-            }
+            if(field->pieces[startpoint[1]-'0' - 2][turnCharIntoLocation(startpoint[1])] == NO_PIECE)
+                if(((destination[1]- '0') == 5) && startpoint[0] == destination[0]) {
+                    return true;
+                }
 
         }
 
