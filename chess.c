@@ -380,6 +380,32 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
         return true;
     }else if(piece == WHITE_KNIGHT || piece == BLACK_KNIGHT) { // Knight
 
+        /*
+            
+
+            
+        */
+
+       int y = 1;
+       for (int i = -2; i < 3; i++) {
+
+            if(i == -1) {
+                y = 2;
+            }else if(i == 2) {
+                y = 1;
+            }
+            
+            if(startpoint[0] + i == destination[0]) {
+                if(((startpoint[1] + y) == destination[1]) || ((startpoint[1] - y) == destination[1])) {
+                    
+                    return true;
+                    
+                }
+            }
+
+       }
+
+
     }else if(piece == WHITE_BISHOP || piece == BLACK_BISHOP) {
 
     }else if(piece == WHITE_PAWN || piece == BLACK_PAWN) {
