@@ -398,7 +398,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
         }
 
 
-        if((field->pieces[destination_row][turnCharIntoLocation(destination[0])] != NO_PIECE) 
+        if((field->pieces[destination_row-1][turnCharIntoLocation(destination[0])] != NO_PIECE) 
                                                             && destination[0] == startpoint[0]) {
 
 
@@ -406,7 +406,7 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
         }else if((destination[0] == startpoint[0] + 1) || (destination[0] == startpoint[0] - 1)) {
             
-            if(field->pieces[destination[1] - '0'][turnCharIntoLocation(destination[0])] == NO_PIECE) {
+            if(field->pieces[destination[1] - '0' - 1][turnCharIntoLocation(destination[0])] == NO_PIECE) {
                 return false;
             }
 
