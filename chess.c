@@ -313,6 +313,11 @@ char checkIfWhitePiece(char i) {
     give the numbers as a decimal.
 */
 char isMovePossible(char piece, char startpoint[2], char destination[2], PlayingField* field) {
+    if(startpoint == destination) {
+        return false;
+    }
+
+
     if(piece == WHITE_TOWER || piece == BLACK_TOWER) { // TOWER
         //one position has to be ident - Style: A1 {0, 1}
         char verticalmove = 2;
@@ -507,8 +512,103 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
     }else if(piece == WHITE_QUEEN || piece == BLACK_QUEEN) {
 
+        /*
+            first check if it's a bishop move or a tower move
+        */
+       
+        if((destination[0] == startpoint[0] && destination[1] != startpoint[1])
+        || (destination[0] != startpoint[0] && destination[1] == startpoint[1])) {
+            //now it's a towermove
+            short diffhor = destination[0] - startpoint[0]; // destination - start
+            short diffvert = destination[1] - startpoint[1];
+            printf("well well well\n");
+            if(diffvert == 0) {
+                int startloc = turnCharIntoLocation(startpoint[0]);
+
+                if(diffhor < 0) {
+                    startloc += diffhor;
+                    diffhor*=-1;
+                }
+                
+                for(int i = 1; i < diffhor; i++) {
+                    if(field->pieces[startpoint[1]-'0'-1][startloc + i] != NO_PIECE) {
+                        return false;
+                    }
+                }
+                return true;
+
+            }else if(diffhor == 0) {
+
+                printf("here\n");
+
+                int startloc = startpoint[1] - '0' - 1;
+
+                if(diffvert < 0) {
+                    startloc += diffvert;
+                    diffvert*=-1;
+                }
+                
+                for(int i = 1; i < diffvert; i++) {
+                    if(field->pieces[startloc + i][turnCharIntoLocation(startpoint[0])] != NO_PIECE) {
+                        return false;
+                    }
+                }
+                return true;
+
+            }else{
+                printf("how did this happen Line: %d\n", __LINE__);
+                return false;
+            }
+
+
+        }else{
+            int diff1 = destination[1] - startpoint[1];
+            if(diff1 < 0) {
+                diff1*=-1;
+            }
+            int diff2 = destination[0] - startpoint[0];
+            if(diff2 < 0) {
+                diff2*=-1;
+            }
+
+            if(diff1 == diff2) {
+                //now it's a bishops move
+
+                for(int i = 1; i < diff1; i++) {
+
+                char current_piece = field->pieces[startpoint[1] - '0' - 1 + i][turnCharIntoLocation(startpoint[0]) + 1];
+
+                if(current_piece != NO_PIECE) {
+                    return false;
+                }
+
+            }
+
+            return true;
+
+
+            }else{
+                return false;
+            }
+
+        }
+
 
     }else if(piece == WHITE_KING || piece == BLACK_KING) {
+
+        for(int i = -1; i < 2; i++) { //horizontal - Numbers
+
+            for(int j = -1; j < 2; j++) {//vertical - Letters
+
+                if(startpoint[1] + i == destination[1] && startpoint[0] + j == destination[0]) {
+
+                    return true;
+
+                }
+
+            }
+
+        }
 
     }
 
