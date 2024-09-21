@@ -612,8 +612,6 @@ char isMovePossible(char piece, char startpoint[2], char destination[2], Playing
 
     }
 
-    //this is a test
-
     return false;
 
 }
